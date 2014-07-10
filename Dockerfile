@@ -5,7 +5,7 @@ MAINTAINER David Zumbrunnen <zumbrunnen@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-ENV APP_RUBY_VERSION 2.0.0
+ENV APP_RUBY_VERSION 2.1.2
 ENV RAILS_ENV production
 ENV DB_USERNAME docker
 ENV DB_PASSWORD docker
