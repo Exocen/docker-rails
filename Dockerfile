@@ -1,25 +1,17 @@
-# Rails Application
-
-FROM zumbrunnen/base
+FROM ubuntu
 MAINTAINER David Zumbrunnen <zumbrunnen@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
-ENV APP_RUBY_VERSION 2.1.2
-ENV RAILS_ENV production
-ENV DB_USERNAME docker
-ENV DB_PASSWORD docker
+RUN apt-get update
+RUN apt-get -y install curl libpq-dev git gnupg
 
-RUN apt-get -qq update
-RUN apt-get -yqq upgrade
-RUN apt-get -yqq install curl libpq-dev
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
+RUN echo 'source /etc/profile.d/rvm.sh' >> /etc/bash.bashrc
 
-RUN \curl -sSL https://get.rvm.io | bash -s stable
-RUN su root -c 'source /usr/local/rvm/scripts/rvm && rvm install $APP_RUBY_VERSION --default'
-
-ADD start_passenger /opt/start_passenger
-ADD supervisor.conf /etc/supervisor/conf.d/rails.conf
+ADD start_app /opt/start_app
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/opt/start_passenger"]

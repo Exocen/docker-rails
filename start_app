@@ -1,0 +1,34 @@
+#!/bin/bash
+# Enviroment vars needed:
+#   APP_NAME: The app name
+#   APP_REPO_URL: The git repo where to clone the app, e.g. https://<token>@github.com/owner/repo.git
+#   RAILS_ENV: The Rails environment, e.g. "production"
+#   DATABASE_URL: e.g. "postgres://myuser:mypass@localhost/somedatabase"
+
+export rvm_install_on_use_flag=1
+set -e
+
+mkdir /srv/$APP_NAME
+cd /srv/$APP_NAME
+
+git clone --depth 1 $APP_REPO_URL .
+
+rvm use .
+
+cat > config/database.yml <<EOL
+<%%= ENV['RAILS_ENV'] %>:
+  url: <%%= ENV['DATABASE_URL'] %>
+  encoding: unicode
+  pool: 5
+EOL
+
+bundle install
+
+if ! gem spec passenger > /dev/null 2>&1; then
+  gem install passenger
+fi
+
+bundle exec rake db:create
+bundle exec rake db:migrate
+
+passenger start -p 80 -e $RAILS_ENV
