@@ -14,4 +14,4 @@ ADD start_app /opt/start_app
 
 EXPOSE 80
 
-CMD ["/opt/start_passenger"]
+CMD ["/opt/start_app"]
