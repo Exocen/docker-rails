@@ -4,7 +4,7 @@
 #   APP_REPO_URL: The git repo where to clone the app, e.g. https://<token>@github.com/owner/repo.git
 #   RAILS_ENV: The Rails environment, e.g. "production"
 #   DATABASE_URL: e.g. "postgres://myuser:mypass@localhost/somedatabase"
-
+source /etc/profile.d/rvm.sh
 export rvm_install_on_use_flag=1
 set -e
 
