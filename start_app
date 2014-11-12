@@ -25,7 +25,7 @@ EOL
 bundle install
 
 if ! gem spec passenger > /dev/null 2>&1; then
-  gem install passenger
+  gem install passenger --no-document
 fi
 
 bundle exec rake db:create
