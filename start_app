@@ -1,29 +1,48 @@
 #!/bin/bash
-# Enviroment vars needed:
+# Enviroment variables:
 #   APP_NAME: The app name
 #   APP_REPO_URL: The git repo where to clone the app, e.g. https://<token>@github.com/owner/repo.git
-#   RAILS_ENV: The Rails environment, e.g. "production"
+#   APP_REPO_REF: The ref (branch or tag), defaults to master
+#   RAILS_ENV: The Rails environment, e.g. "test" (optional, default: production)
 #   DATABASE_URL: e.g. "postgres://myuser:mypass@localhost/somedatabase"
+
 trap 'exit' ERR
 
 source /etc/profile.d/rvm.sh
 export rvm_install_on_use_flag=1
 
+# Set defaults for (optional) environment variables, if not present
+${APP_REPO_REF:=master}
+${RAILS_ENV:=production}
+
+# Create and change to app directory
 mkdir /srv/$APP_NAME
 cd /srv/$APP_NAME
 
-git clone --depth 1 $APP_REPO_URL .
+# Clone your repo and remove DB config, if found
+git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL .
 rm -f config/database.yml
 
+# Adapt Ruby settings from .ruby-version and .ruby-gemset
 rvm use .
 
+# Install Gems. Install Passenger, if not yet present
 bundle install
-
 if ! gem spec passenger > /dev/null 2>&1; then
   gem install passenger --no-document
 fi
 
+# Create, migrate DB and precompile assets
 rake db:create
 rake db:migrate
+rake assets:precompile
 
+# Run your custom startup scripts in project's subdir 'deploy'
+if [ -d ./deploy ]; then
+  for f in ./deploy/*.sh; do
+    [ -f "$f" ] && . "$f"
+  done
+fi
+
+# Start web server (Passenger in Standalone mode)
 passenger start -p 80 -e $RAILS_ENV

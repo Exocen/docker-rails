@@ -5,15 +5,20 @@ A simple Docker Image for running Ruby on Rails Rails applications with Passenge
 
 ## Starting The Container
 
-`docker run -d -name <containername> -link <dbcontainer>:db -e APP_NAME=<appname> zumbrunnen/rails`
+### Sample
 
-`docker run --name <appname> -e APP_NAME=<app_name> -e ... zumbrunnen/rails`
+`docker run --name foo_app -e APP_NAME=foo -e APP_REPO_URL="https://githubsecrettoken@github.com/organization/foo.git" -e APP_REPO_REF=branchxy -e RAILS_ENV=production -e DATABASE_URL="postgres://docker:docker@dbserver.internal/foo_production" zumbrunnen/rails`
 
 The environment variables needed are:
 
- * `APP_NAME` - e.g. "superapp"
+ * `APP_NAME` - Your app's name
  * `APP_REPO_URL` - A Git repo to clone the source from, e.g. "https://githubsecrettoken@github.com/organization/project.git"
- * `RAILS_ENV` - e.g. "production"
- * `DATABASE_URL` - In the form: "dbtype://user:password@hostname/dbname", e.g. "postgres://docker:docker@dbserver.lan/project_production"
+ * `APP_REPO_REF` - A Git branch or tag to checkout (optional, defaults to master branch)
+ * `RAILS_ENV` - e.g. "test" (optional, defaults to 'production')
+ * `DATABASE_URL` - In the form: "dbtype://user:password@hostname/dbname"
 
 When the container starts, the source will be cloned into /srv/$APP_NAME, the necessary gems will be installed, then the DB will be prepared (created and migrated), and eventually, Passenger will be started in standalone mode. See [the start script](../master/start_app).
+
+## Customization
+
+To execute additional commands, place your scripts in `deploy` directory in your repo. All the .sh files in there will be run before Passenger starts.
