@@ -16,7 +16,7 @@ APP_REPO_REF=${APP_REPO_REF:=master}
 RAILS_ENV=${RAILS_ENV:=production}
 
 # Create and change to app directory
-mkdir /srv/$APP_NAME
+mkdir -p /srv/$APP_NAME
 cd /srv/$APP_NAME
 
 # Clone your repo and remove DB config, if found
