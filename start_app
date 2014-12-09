@@ -19,8 +19,13 @@ RAILS_ENV=${RAILS_ENV:=production}
 mkdir -p /srv/$APP_NAME
 cd /srv/$APP_NAME
 
-# Clone your repo and remove DB config, if found
-git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL .
+# Clone/pull your repo and remove DB config, if found
+if [ ! -d ".git" ]; then
+  git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL .
+else
+  git checkout $APP_REPO_REF
+  git pull
+fi
 rm -f config/database.yml
 
 # Adapt Ruby settings from .ruby-version and .ruby-gemset
