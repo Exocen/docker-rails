@@ -12,8 +12,8 @@ source /etc/profile.d/rvm.sh
 export rvm_install_on_use_flag=1
 
 # Set defaults for (optional) environment variables, if not present
-APP_REPO_REF=${APP_REPO_REF:=master}
-RAILS_ENV=${RAILS_ENV:=production}
+export APP_REPO_REF=${APP_REPO_REF:=master}
+export RAILS_ENV=${RAILS_ENV:=production}
 
 # Create and change to app directory
 mkdir -p /srv/$APP_NAME
