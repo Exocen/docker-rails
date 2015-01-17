@@ -9,7 +9,6 @@
 trap 'exit' ERR
 
 source /etc/profile.d/rvm.sh
-export rvm_install_on_use_flag=1
 
 # Set defaults for (optional) environment variables, if not present
 export ${APP_REPO_REF:=master}

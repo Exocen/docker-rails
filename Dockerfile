@@ -2,6 +2,8 @@ FROM ubuntu:utopic
 MAINTAINER David Zumbrunnen <zumbrunnen@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV rvm_install_on_use_flag 1
+
 
 RUN apt-get update
 RUN apt-get -y install curl libpq-dev git gnupg
