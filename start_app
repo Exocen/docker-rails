@@ -19,8 +19,6 @@ source /etc/profile.d/rvm.sh
 export ${APP_REPO_REF:=master}
 export ${RAILS_ENV:=production}
 
-executeHook before_checkout
-
 # Clone/pull your repo and remove DB config, if found
 if [ ! -d "/srv/$APP_NAME/.git" ]; then
   git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL /srv/$APP_NAME

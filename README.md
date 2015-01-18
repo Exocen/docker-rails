@@ -31,9 +31,8 @@ When the container starts, the source will be cloned into /srv/$APP_NAME, the ne
 
 ## Deploy Hooks
 
-Deploy hooks are Ruby or Bash scripts which are executed at designated points in the deployment process. This allows you to customize the deployment of your application to meet its particular needs. Just place your scripts in a `/deploy` directory of your Rails app's repository.
+Deploy hooks are Ruby or Bash scripts which are executed at designated points in the deployment process. This allows you to customize the deployment of your application to meet its particular needs. Just place your scripts (.rb or .sh) in a `/deploy` directory in your Rails app's repository.
 
- * `before_checkout.(sh|rb)` - Before your repo is cloned/pulled. E.g. to install additional packages.
- * `before_bundle.(sh|rb)` - Before Bundler runs. E.g. to adjust your code after checkout.
+ * `before_bundle.(sh|rb)` - Before Bundler runs. E.g. to adjust your code after checkout or to install additional packages.
  * `after_bundle.(sh|rb)` - After the Bundler run. Maybe you want some additional gems installed?
  * `before_start.(sh|rb)` - Final hook before the web server starts.
