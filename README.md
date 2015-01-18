@@ -29,6 +29,11 @@ The environment variables needed are:
 
 When the container starts, the source will be cloned into /srv/$APP_NAME, the necessary gems will be installed, then the DB will be prepared (created and schema.rb loaded), and eventually, Passenger will be started in standalone mode. See [the start script](../master/start_app).
 
-## Customization
+## Deploy Hooks
 
-To execute additional commands, place your scripts in `deploy` directory in your repo. All the .sh files in there will be run before Passenger starts.
+Deploy hooks are Ruby or Bash scripts which are executed at designated points in the deployment process. This allows you to customize the deployment of your application to meet its particular needs. Just place your scripts in a `/deploy` directory of your Rails app's repository.
+
+ * `before_checkout.(sh|rb)` - Before your repo is cloned/pulled. E.g. to install additional packages.
+ * `before_bundle.(sh|rb)` - Before Bundler runs. E.g. to adjust your code after checkout.
+ * `after_bundle.(sh|rb)` - After the Bundler run. Maybe you want some additional gems installed?
+ * `before_start.(sh|rb)` - Final hook before the web server starts.

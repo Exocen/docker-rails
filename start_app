@@ -8,11 +8,18 @@
 
 trap 'exit' ERR
 
+executeHook() {
+  find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
+  find ./deploy -type f -iname "$1.sh" -exec sh {} \;
+}
+
 source /etc/profile.d/rvm.sh
 
 # Set defaults for (optional) environment variables, if not present
 export ${APP_REPO_REF:=master}
 export ${RAILS_ENV:=production}
+
+executeHook before_checkout
 
 # Clone/pull your repo and remove DB config, if found
 if [ ! -d "/srv/$APP_NAME/.git" ]; then
@@ -26,8 +33,13 @@ fi
 rvm_install_on_use_flag=1 cd /srv/$APP_NAME
 rm -f config/database.yml
 
+executeHook before_bundle
+
 # Install Gems. Install Passenger, if not yet present
 bundle install --without "test development" --quiet
+
+executeHook after_bundle
+
 if ! gem spec passenger > /dev/null 2>&1; then
   gem install passenger
 fi
@@ -38,12 +50,7 @@ rake db:schema:load
 rake db:seed
 rake assets:precompile
 
-# Run your custom startup scripts in project's subdir 'deploy'
-if [ -d ./deploy ]; then
-  for f in ./deploy/*.sh; do
-    [ -f "$f" ] && . "$f"
-  done
-fi
+executeHook before_start
 
 # Start web server (Passenger in Standalone mode)
 passenger start -p 80 -e $RAILS_ENV
