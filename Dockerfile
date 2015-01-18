@@ -14,6 +14,9 @@ RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
 
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 ADD start_app /opt/start_app
 
 EXPOSE 80
