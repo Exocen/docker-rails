@@ -9,8 +9,10 @@
 trap 'exit' ERR
 
 executeHook() {
-  find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
-  find ./deploy -type f -iname "$1.sh" -exec sh {} \;
+  if [ -d ./deploy ]; then
+    find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
+    find ./deploy -type f -iname "$1.sh" -exec sh {} \;
+  fi
 }
 
 source /etc/profile.d/rvm.sh
