@@ -45,9 +45,11 @@ if ! gem spec passenger > /dev/null 2>&1; then
 fi
 
 # Create, migrate DB and precompile assets
-rake db:create
-rake db:schema:load
-rake db:seed
+if rake db:version | grep ": 0$"; then
+  rake db:setup
+else
+  rake db:migrate
+fi
 rake assets:precompile
 
 executeHook before_start
