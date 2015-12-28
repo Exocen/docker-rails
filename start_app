@@ -31,6 +31,12 @@ fi
 
 # Change to app dir and adapt Ruby settings from .ruby-version and .ruby-gemset
 rvm_install_on_use_flag=1 cd /srv/$APP_NAME
+
+# Install bundler, if not yet present
+if ! gem spec bundler > /dev/null 2>&1; then
+  gem install bundler
+fi
+
 rm -f config/database.yml
 
 executeHook before_bundle
