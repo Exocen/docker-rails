@@ -1,4 +1,4 @@
-FROM ubuntu:utopic
+FROM ubuntu:wily
 MAINTAINER David Zumbrunnen <zumbrunnen@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
