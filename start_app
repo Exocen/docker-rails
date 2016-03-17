@@ -17,6 +17,9 @@ executeHook() {
 
 source /etc/profile.d/rvm.sh
 
+rvm install ruby-2.3.0
+rvm use --default ruby-2.3.0
+
 export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
 
 # Clone/pull your repo and remove DB config, if found
