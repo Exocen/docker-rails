@@ -32,7 +32,7 @@ if [ ! -d "~/$APP_NAME/.git" ]; then
 # Change to app dir and adapt Ruby settings from .ruby-version and .ruby-gemset
 rvm_install_on_use_flag=1 cd ~/$APP_NAME
 
-export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
+
 # Install bundler, if not yet present
 gem install bundler
 
@@ -42,6 +42,8 @@ executeHook before_bundle
 
 # Install Gems. Install Passenger, if not yet present
 bundle install --without "test development"
+
+export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
 
 executeHook after_bundle
 
