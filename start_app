@@ -21,7 +21,7 @@ rvm install ruby-2.3.0
 rvm use --default ruby-2.3.0
 
 # Clone/pull your repo and remove DB config, if found
-if [ ! -d "~/$APP_NAME/" ]; then
+if [ ! -d "~/$APP_NAME" ]; then
   git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL ~/$APP_NAME
   else
     git -C ~/$APP_NAME checkout $APP_REPO_REF
