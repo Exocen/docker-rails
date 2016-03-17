@@ -20,8 +20,6 @@ source /etc/profile.d/rvm.sh
 rvm install ruby-2.3.0
 rvm use --default ruby-2.3.0
 
-export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
-
 # Clone/pull your repo and remove DB config, if found
 if [ ! -d "~/$APP_NAME/.git" ]; then
   git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL ~/$APP_NAME
@@ -29,6 +27,8 @@ if [ ! -d "~/$APP_NAME/.git" ]; then
     git -C ~/$APP_NAME checkout $APP_REPO_REF
       git -C ~/$APP_NAME pull
       fi
+
+export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
 
 # Change to app dir and adapt Ruby settings from .ruby-version and .ruby-gemset
 rvm_install_on_use_flag=1 cd ~/$APP_NAME
