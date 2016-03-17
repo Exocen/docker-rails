@@ -12,7 +12,7 @@ RUN apt-get -y install curl libpq-dev git gnupg gawk g++ gcc make   \
 
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
-
+RUN rvm install ruby-2.3.0
 RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
 
 RUN apt-get clean
