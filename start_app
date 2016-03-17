@@ -19,9 +19,9 @@ source /etc/profile.d/rvm.sh
 
 rvm install ruby-2.3.0
 rvm use --default ruby-2.3.0
-
+cd ~
 # Clone/pull your repo and remove DB config, if found
-if [ ! -d "~/$APP_NAME" ]; then
+if [ ! -d "$APP_NAME" ]; then
   git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL ~/$APP_NAME
   else
     git -C ~/$APP_NAME checkout $APP_REPO_REF
@@ -47,7 +47,7 @@ export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
 
 gem install executable-hooks
 
-executeHook after_bundle
+# executeHook after_bundle
 
 if ! gem spec passenger > /dev/null 2>&1; then
   gem install passenger
@@ -61,7 +61,7 @@ if rake db:version | grep ": 0$"; then
     fi
     rake assets:precompile
 
-executeHook before_start
+# executeHook before_start
 
 # Start web server (Passenger in Standalone mode)
 passenger start -p 80 -e $RAILS_ENV
