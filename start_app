@@ -44,7 +44,7 @@ executeHook before_bundle
 bundle install --without "test development"
 
 export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
-bundle clean
+
 gem install executable-hooks
 
 executeHook after_bundle
