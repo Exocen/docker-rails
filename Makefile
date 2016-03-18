@@ -17,7 +17,7 @@ run:
        -e APP_REPO_URL="https://github.com/exocen/website.git"\
        -e APP_REPO_REF=$(REPONAME) \
        -e RAILS_ENV=production \
-       -e POSTGRES_USERNAME=username \
-			 -e POSTGRES_PASSWORD=password \
-			 -e POSTGRES_IP=ip \
+       -e POSTGRES_USERNAME=postgres \
+			 -e POSTGRES_PASSWORD=zazaza \
+			 -e POSTGRES_IP=172.17.0.2 \
  $(MAINTAINERNAME)/$(IMAGENAME)
