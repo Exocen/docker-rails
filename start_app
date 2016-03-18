@@ -46,7 +46,7 @@ if ! gem spec passenger > /dev/null 2>&1; then
   gem install passenger
 fi
 
-# Create, migrate DB and precompile assets
+gem update --system 2.4.8 --no-ri --no-rdoc
 
 # Create, migrate DB and precompile assets
 if rake db:version | grep ": 0$"; then
