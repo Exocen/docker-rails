@@ -8,15 +8,17 @@ A simple Docker Image for running Ruby on Rails applications with Passenger. It 
 ### Example
 
 ```
-docker run --name foo_app \
-    -e APP_NAME=foo \
-    -e APP_REPO_URL="https://githubsecrettoken@github.com/organization/foo.git" \
-    -e APP_REPO_REF=branchxy \
-    -e RAILS_ENV=production \
-    -e DATABASE_URL="postgres://docker:docker@dbserver.internal/foo_production" \
-    -e SECRET_KEY_BASE="yoursecretkeybaseforproduction"
-    zumbrunnen/rails
+MAINTAINERNAME=exo
+IMAGENAME=rorimage
+CONTAINERNAME=ROR
+REPONAME=master
+RAILS_ENV=production
+POSTGRES_USERNAME=username
+POSTGRES_PASSWORD=password
+POSTGRES_IP=ip
+
 ```
+and 'make'
 
 The environment variables needed are:
 
@@ -29,10 +31,7 @@ The environment variables needed are:
 
 When the container starts, the source will be cloned into /srv/$APP_NAME, the necessary gems will be installed, then the DB will be prepared (created and schema.rb loaded), and eventually, Passenger will be started in standalone mode. See [the start script](../master/start_app).
 
-## Deploy Hooks
+## TODO
 
-Deploy hooks are Ruby or Bash scripts which are executed at designated points in the deployment process. This allows you to customize the deployment of your application to meet its particular needs. Just place your scripts (.rb or .sh) in a `/deploy` directory in your Rails app's repository.
-
- * `before_bundle.(sh|rb)` - Before Bundler runs. E.g. to adjust your code after checkout or to install additional packages.
- * `after_bundle.(sh|rb)` - After the Bundler run. Maybe you want some additional gems installed?
- * `before_start.(sh|rb)` - Final hook before the web server starts.
+* MakeFile optimisation
+* Ref ReadMe
