@@ -8,12 +8,12 @@
 
 trap 'exit' ERR
 
-executeHook() {
-  if [ -d ./deploy ]; then
-    find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
-    find ./deploy -type f -iname "$1.sh" -exec sh {} \;
-  fi
-}
+#executeHook() {
+#  if [ -d ./deploy ]; then
+#    find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
+#    find ./deploy -type f -iname "$1.sh" -exec sh {} \;
+#  fi
+#}
 
 source /etc/profile.d/rvm.sh
 
@@ -43,7 +43,7 @@ gem install bundler
 
 #rm -f config/database.yml
 
-executeHook before_bundle
+#executeHook before_bundle
 
 # Install Gems. Install Passenger, if not yet present
 bundle install --without "test development"
