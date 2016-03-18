@@ -1,7 +1,7 @@
 MAINTAINERNAME=exo
 IMAGENAME=rorimage
 CONTAINERNAME=ROR
-REPONAME=down
+REPONAME=master
 
 all: build run
 

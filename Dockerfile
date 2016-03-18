@@ -1,5 +1,5 @@
 
-FROM debian:latest
+FROM ubuntu:wily
 MAINTAINER Exo
 
 ENV DEBIAN_FRONTEND noninteractive

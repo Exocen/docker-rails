@@ -10,27 +10,32 @@ trap 'exit' ERR
 
 executeHook() {
   if [ -d ./deploy ]; then
-      find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
-          find ./deploy -type f -iname "$1.sh" -exec sh {} \;
-	    fi
-	    }
+    find ./deploy -type f -iname "$1.rb" -exec ruby {} \;
+    find ./deploy -type f -iname "$1.sh" -exec sh {} \;
+  fi
+}
 
 source /etc/profile.d/rvm.sh
+
 
 rvm install ruby-2.3.0
 rvm use --default ruby-2.3.0
 cd ~
 # Clone/pull your repo and remove DB config, if found
-if [ ! -d "$APP_NAME" ]; then
-  git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL ~/$APP_NAME
-  else
-    git -C ~/$APP_NAME checkout $APP_REPO_REF
-      git -C ~/$APP_NAME pull
-      fi
-
+if [ ! -d "/srv/$APP_NAME/.git" ]; then
+  git clone --depth 1 --branch $APP_REPO_REF $APP_REPO_URL /srv/$APP_NAME
+else
+  git -C /srv/$APP_NAME checkout $APP_REPO_REF
+  git -C /srv/$APP_NAME pull
+fi
 
 # Change to app dir and adapt Ruby settings from .ruby-version and .ruby-gemset
-rvm_install_on_use_flag=1 cd ~/$APP_NAME
+rvm_install_on_use_flag=1 cd /srv/$APP_NAME
+
+# Install bundler, if not yet present
+if ! gem spec bundler > /dev/null 2>&1; then
+  gem install bundler
+fi
 
 
 # Install bundler, if not yet present
@@ -45,21 +50,21 @@ bundle install --without "test development"
 
 export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)
 
-gem install executable-hooks
-
 # executeHook after_bundle
 
 if ! gem spec passenger > /dev/null 2>&1; then
   gem install passenger
-  fi
+fi
+
+# Create, migrate DB and precompile assets
 
 # Create, migrate DB and precompile assets
 if rake db:version | grep ": 0$"; then
   rake db:setup
-  else
-    rake db:migrate
-    fi
-    rake assets:precompile
+else
+  rake db:migrate
+fi
+rake assets:precompile
 
 # executeHook before_start
 
