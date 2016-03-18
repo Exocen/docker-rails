@@ -1,0 +1,13 @@
+diff --git a/lib/rubygems/specification.rb b/lib/rubygems/specification.rb
+index 726d301..a010bb0 100644
+--- a/lib/rubygems/specification.rb
++++ b/lib/rubygems/specification.rb
+@@ -2999,6 +2999,8 @@ open-ended dependency on #{dep} is not recommended
+
+   extend Gem::Deprecate
+
++  def this; self; end
++
+   # TODO:
+   # deprecate :has_rdoc,            :none,       2011, 10
+   # deprecate :has_rdoc?,           :none,       2011, 10
