@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
 RUN apt-get -y install curl libpq-dev git gnupg gawk g++ gcc make   \
-      libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 autoconf  \
+      libreadline6-dev libyaml-dev libsqlite3-dev autoconf  \
             libgdbm-dev libncurses5-dev automake libtool bison pkg-config \
 	          libffi-dev lsb-release nodejs ImageMagick libgmp-dev
 
