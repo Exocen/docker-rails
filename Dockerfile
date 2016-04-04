@@ -1,4 +1,4 @@
-FROM exocen/ruby:latest
+FROM exocen/docker-ruby:latest
 MAINTAINER Exo
 
 RUN apt-get update
