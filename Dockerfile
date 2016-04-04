@@ -24,8 +24,21 @@ ADD nginx-sites.conf /etc/nginx/sites-enabled/default
 # Install foreman
 RUN gem install foreman
 
-# Rails App directory
+# Install the latest postgresql lib for pg gem
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --force-yes libpq-dev
+
+## Install MySQL(for mysql, mysql2 gem)
+RUN apt-get install -qq -y libmysqlclient-dev
+
+# Install Rails App
 WORKDIR /app
+ONBUILD ADD Gemfile /app/Gemfile
+ONBUILD ADD Gemfile.lock /app/Gemfile.lock
+ONBUILD RUN bundle install --without development test
+ONBUILD ADD . /app
 
 # Add default unicorn config
 ADD unicorn.rb /app/config/unicorn.rb
