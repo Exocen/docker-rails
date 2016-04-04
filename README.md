@@ -1,38 +1,103 @@
-docker-rails
-============
+# Rails(+ Nginx, Unicorn) Dockerfile Pro
 
-A simple Docker Image for running Ruby on Rails applications with Passenger. It checks for `.ruby-version` and `.ruby-gemset` files in the app's root directory and installs the desired Ruby version.
+Easy useable docker for rails. more configuration, affordable production.
 
-## Starting The Container
+## What's include
 
-### Example
+* unicorn, nginx, foreman
+
+
+# Usage
+
+* Create `Dockerfile` to your project and paste below code.
 
 ```
-docker run --name foo_app \
-    -e APP_NAME=foo \
-    -e APP_REPO_URL="https://githubsecrettoken@github.com/organization/foo.git" \
-    -e APP_REPO_REF=branchxy \
-    -e RAILS_ENV=production \
-    -e DATABASE_URL="postgres://docker:docker@dbserver.internal/foo_production" \
-    -e SECRET_KEY_BASE="yoursecretkeybaseforproduction"
-    zumbrunnen/rails
+# Dockerfile
+FROM seapy/rails-nginx-unicorn-pro:v1.0-ruby2.2.0-nginx1.6.0
+MAINTAINER seapy(iamseapy@gmail.com)
+
+# Add here your preinstall lib(e.g. imagemagick, mysql lib, pg lib, ssh config)
+
+#(required) Install Rails App
+ADD Gemfile /app/Gemfile
+ADD Gemfile.lock /app/Gemfile.lock
+RUN bundle install --without development test
+ADD . /app
+
+#(required) nginx port number
+EXPOSE 80
 ```
 
-The environment variables needed are:
+* Add `unicorn` gem(maybe uncomment `gem 'unicorn'` in `Gemfile`)
 
- * `APP_NAME` - Your app's name
- * `APP_REPO_URL` - A Git repo to clone the source from
- * `APP_REPO_REF` - A Git branch or tag to checkout (optional, defaults to master branch)
- * `RAILS_ENV` - The Ruby on Rails environment (optional, defaults to 'production')
- * `DATABASE_URL` - Database connection information
- * `SECRET_KEY_BASE` - Session storage key for this environment
+## Build and run docker
 
-When the container starts, the source will be cloned into /srv/$APP_NAME, the necessary gems will be installed, then the DB will be prepared (created and schema.rb loaded), and eventually, Passenger will be started in standalone mode. See [the start script](../master/start_app).
+```
+# build your dockerfile
+$ docker build -t your/project .
 
-## Deploy Hooks
+# run container
+$ docker run -d -p 80:80 -e SECRET_KEY_BASE=secretkey your/project
+```
 
-Deploy hooks are Ruby or Bash scripts which are executed at designated points in the deployment process. This allows you to customize the deployment of your application to meet its particular needs. Just place your scripts (.rb or .sh) in a `/deploy` directory in your Rails app's repository.
+## Screencast
 
- * `before_bundle.(sh|rb)` - Before Bundler runs. E.g. to adjust your code after checkout or to install additional packages.
- * `after_bundle.(sh|rb)` - After the Bundler run. Maybe you want some additional gems installed?
- * `before_start.(sh|rb)` - Final hook before the web server starts.
+[Easy Ruby On Rails deploy on Docker](http://youtu.be/QgmzBuPuM6I)
+
+
+# Custom pre-install lib
+
+if your rails app required lib like imagemagick(or mysql) you must install that before `Install Rails App` section
+
+## Install imagemagick
+
+```
+RUN apt-get -qq -y install libmagickwand-dev imagemagick
+```
+
+## Install MySQL(for mysql, mysql2 gem)
+
+```
+RUN apt-get install -qq -y mysql-server mysql-client libmysqlclient-dev
+```
+
+## Install PostgreSQL lib(for pg gem)
+
+```
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --force-yes libpq-dev
+```
+
+## Access bitbucket private repository
+
+```
+RUN mkdir /root/.ssh/
+ADD id_rsa /root/.ssh/id_rsa
+RUN touch /root/.ssh/known_hosts
+RUN ssh-keyscan -t rsa bitbucket.org >> /root/.ssh/known_hosts
+```
+
+Copy your `~/.ssh/id_rsa` to `id_rsa` for bitbucket connection. if you don't need to bitbucket connection, create blank `id_rsa`. don't forget add `id_rsa` to `.gitignore`
+
+
+# Customize Nginx, Unicorn, foreman config
+
+## Nginx
+
+```
+# your Dockerfile
+...
+ADD config/your-custom-nginx.conf /etc/nginx/sites-enabled/default
+...
+```
+
+## Unicorn
+
+place your unicorn config to `config/unicorn.rb`
+
+## foreman
+
+place your Procfile to app root
+

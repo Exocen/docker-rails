@@ -1,23 +1,38 @@
-FROM ubuntu:latest
+FROM exocen/ruby:latest
 MAINTAINER Exo
 
-ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update
-RUN apt-get -y install curl libpq-dev git gnupg gawk g++ gcc make   \
-      libreadline6-dev libyaml-dev libsqlite3-dev sqlite3 autoconf  \
-            libgdbm-dev libncurses5-dev automake libtool bison pkg-config \
-	          libffi-dev lsb-release nodejs ImageMagick libgmp-dev
 
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
-RUN \curl -sSL https://get.rvm.io | bash -s stable --ruby
-RUN echo "gem: --no-rdoc --no-ri" > ~/.gemrc
+#Install imageMagic
+RUN apt-get install -qq -y imagemagick
 
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Install nodejs
+RUN apt-get install -qq -y nodejs
 
-ADD start_app /opt/start_app
+# Intall software-properties-common for add-apt-repository
+RUN apt-get install -qq -y software-properties-common
 
-EXPOSE 80
+# Install Nginx.
+RUN add-apt-repository -y ppa:nginx/development
+RUN apt-get update
+RUN apt-get install -qq -y nginx-light
+RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
+RUN chown -R www-data:www-data /var/lib/nginx
+# Add default nginx config
+ADD nginx-sites.conf /etc/nginx/sites-enabled/default
 
-CMD ["/opt/start_app"]
+# Install foreman
+RUN gem install foreman
+
+# Rails App directory
+WORKDIR /app
+
+# Add default unicorn config
+ADD unicorn.rb /app/config/unicorn.rb
+
+# Add default foreman config
+ADD Procfile /app/Procfile
+
+ENV RAILS_ENV production
+
+CMD bundle exec rake assets:precompile && foreman start -f Procfile
