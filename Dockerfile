@@ -15,7 +15,7 @@ RUN apt-get install -qq -y software-properties-common
 # Install Nginx.
 RUN add-apt-repository -y ppa:nginx/development
 RUN apt-get update -qq
-RUN apt-get install -qq -y nginx-light
+RUN apt-get install -qq -y nginx-extras
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
 # Add default nginx config
