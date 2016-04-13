@@ -6,6 +6,9 @@ RUN apt-get update
 #Install imageMagic
 RUN apt-get install -qq -y imagemagick
 
+#Install Vim
+RUN apt-get install -qq -y vim
+
 # Install nodejs
 RUN apt-get install -qq -y nodejs
 
