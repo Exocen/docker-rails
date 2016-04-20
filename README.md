@@ -1,30 +1,16 @@
-# Rails(+ Nginx, Unicorn) Dockerfile Pro
+# Rails(+ Nginx, Unicorn) Dockerfile
 
-Easy useable docker for rails. more configuration, affordable production.
-
-## What's include
-
-* unicorn, nginx, foreman
-
-
-# Usage
+## Usage
 
 * Create `Dockerfile` to your project and paste below code.
 
 ```
 # Dockerfile
-FROM seapy/rails-nginx-unicorn-pro:v1.0-ruby2.2.0-nginx1.6.0
-MAINTAINER seapy(iamseapy@gmail.com)
+FROM exocen/docker-rails
+MAINTAINER Exocen
 
 # Add here your preinstall lib(e.g. imagemagick, mysql lib, pg lib, ssh config)
 
-#(required) Install Rails App
-ADD Gemfile /app/Gemfile
-ADD Gemfile.lock /app/Gemfile.lock
-RUN bundle install --without development test
-ADD . /app
-
-#(required) nginx port number
 EXPOSE 80
 ```
 
@@ -39,23 +25,9 @@ $ docker build -t your/project .
 
 # run container
 $ docker run -d -p 80:80 -e SECRET_KEY_BASE=secretkey your/project
-=======
-MAINTAINERNAME=exo
-IMAGENAME=rorimage
-CONTAINERNAME=ROR
-REPONAME=master
-RAILS_ENV=production
-POSTGRES_USERNAME=username
-POSTGRES_PASSWORD=password
-POSTGRES_IP=ip
 
 
 ```
-and 'make'
-
-## Screencast
-
-[Easy Ruby On Rails deploy on Docker](http://youtu.be/QgmzBuPuM6I)
 
 
 # Custom pre-install lib
@@ -114,9 +86,3 @@ place your unicorn config to `config/unicorn.rb`
 ## foreman
 
 place your Procfile to app root
-
-=======
-## TODO
-
-* MakeFile optimisation
-* Ref ReadMe
