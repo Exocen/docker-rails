@@ -37,8 +37,6 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/
 # Install MySQL(for mysql, mysql2 gem)
 RUN apt-get install -qq -y libmysqlclient-dev
 
-# Add letsEncrypt
-RUN git clone https://github.com/letsencrypt/letsencrypt
 
 # Generate certificat
 WORKDIR  /etc/ssl/certs
@@ -50,6 +48,9 @@ ONBUILD ADD Gemfile /app/Gemfile
 ONBUILD ADD Gemfile.lock /app/Gemfile.lock
 ONBUILD RUN bundle install --without development test
 ONBUILD ADD . /app
+
+# Add letsEncrypt
+RUN wget https://dl.eff.org/certbot-auto
 
 # Add default unicorn config
 ADD unicorn.rb /app/config/unicorn.rb
