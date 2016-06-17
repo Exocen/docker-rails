@@ -34,8 +34,15 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --force-yes libpq-dev
 
-## Install MySQL(for mysql, mysql2 gem)
+# Install MySQL(for mysql, mysql2 gem)
 RUN apt-get install -qq -y libmysqlclient-dev
+
+# Add letsEncrypt
+RUN git clone https://github.com/letsencrypt/letsencrypt
+
+# Generate certificat
+WORKDIR  /etc/ssl/certs
+RUN openssl dhparam -dsaparam -out dhparam.pem 4096
 
 # Install Rails App
 WORKDIR /app
